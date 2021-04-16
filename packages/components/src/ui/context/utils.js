@@ -1,9 +1,7 @@
 /**
  * Internal dependencies
  */
-import { CONNECTED_NAMESPACE } from './constants';
-
-export const COMPONENT_NAMESPACE = 'data-wp-component';
+import { CONNECTED_NAMESPACE, COMPONENT_NAMESPACE } from './constants';
 
 /**
  * Creates a dedicated context namespace HTML attribute for components.
@@ -17,7 +15,7 @@ export const COMPONENT_NAMESPACE = 'data-wp-component';
  * @param {string} componentName The name for the component.
  * @return {Record<string, any>} A props object with the namespaced HTML attribute.
  */
-export function ns( componentName ) {
+export function getNamespace( componentName ) {
 	return { [ COMPONENT_NAMESPACE ]: componentName };
 }
 
@@ -32,6 +30,6 @@ export function ns( componentName ) {
  *
  * @return {Record<string, any>} A props object with the namespaced HTML attribute.
  */
-export function cns() {
+export function getConnectedNamespace() {
 	return { [ CONNECTED_NAMESPACE ]: true };
 }

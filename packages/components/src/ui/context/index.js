@@ -6,4 +6,3 @@ export {
 } from './context-system-provider';
 export { contextConnect } from './context-connect';
 export { useContextSystem } from './use-context-system';
-export { ns, cns } from './utils';

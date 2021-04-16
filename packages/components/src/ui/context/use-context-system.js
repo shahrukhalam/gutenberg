@@ -14,14 +14,13 @@ import warn from '@wordpress/warning';
  */
 import { cx } from '../styles';
 import { getInterpolatedClassName } from '../create-styles';
-import { CONNECTED_NAMESPACE } from './constants';
 import { useComponentsContext } from './context-system-provider';
-import { ns } from './utils';
+import { getNamespace, getConnectedNamespace } from './utils';
 
 /* eslint-disable jsdoc/valid-types */
 /**
  * @template TProps
- * @typedef {TProps & { [CONNECTED_NAMESPACE]: boolean; className: string; children?: import('react').ReactNode }} ConnectedProps
+ * @typedef {TProps & { className: string; children?: import('react').ReactNode }} ConnectedProps
  */
 /* eslint-enable jsdoc/valid-types */
 
@@ -36,11 +35,10 @@ import { ns } from './utils';
  */
 export function useContextSystem( props, namespace ) {
 	const contextSystemProps = useComponentsContext();
-	const displayName = Array.isArray( namespace ) ? namespace[ 0 ] : namespace;
-
 	if ( typeof namespace === 'undefined' ) {
 		warn( 'useContextSystem: Please provide a namespace' );
 	}
+	const displayName = Array.isArray( namespace ) ? namespace[ 0 ] : namespace;
 
 	const contextProps = contextSystemProps?.[ displayName ] || {};
 
@@ -48,17 +46,10 @@ export function useContextSystem( props, namespace ) {
 	/** @type {ConnectedProps<P>} */
 	// @ts-ignore We fill in the missing properties below
 	const finalComponentProps = {
-		[ CONNECTED_NAMESPACE ]: true,
+		...getConnectedNamespace(),
+		...getNamespace( displayName ),
 	};
 	/* eslint-enable jsdoc/no-undefined-types */
-
-	const nextNs = ns( displayName );
-	for ( const k in nextNs ) {
-		if ( typeof nextNs[ k ] === 'string' ) {
-			// @ts-ignore filling in missing props
-			finalComponentProps[ k ] = nextNs[ k ];
-		}
-	}
 
 	const { _overrides: overrideProps, ...otherContextProps } = contextProps;
 
@@ -80,14 +71,14 @@ export function useContextSystem( props, namespace ) {
 			? initialMergedProps.renderChildren( initialMergedProps )
 			: initialMergedProps.children;
 
-	for ( const k in initialMergedProps ) {
+	for ( const key in initialMergedProps ) {
 		// @ts-ignore filling in missing props
-		finalComponentProps[ k ] = initialMergedProps[ k ];
+		finalComponentProps[ key ] = initialMergedProps[ key ];
 	}
 
-	for ( const k in overrideProps ) {
+	for ( const key in overrideProps ) {
 		// @ts-ignore filling in missing props
-		finalComponentProps[ k ] = overrideProps[ k ];
+		finalComponentProps[ key ] = overrideProps[ key ];
 	}
 
 	finalComponentProps.children = rendered;

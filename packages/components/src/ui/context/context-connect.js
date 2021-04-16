@@ -128,6 +128,3 @@ export function hasConnectNamespace( Component, match ) {
 
 	return false;
 }
-
-export const getNamespace = getConnectNamespace;
-export const hasNamespace = hasConnectNamespace;
